@@ -1,5 +1,8 @@
 # From Python .gitignore: https://github.com/github/gitignore/blob/master/Python.gitignore
 
+# Our Ignored Files
+*secret_key.py
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
