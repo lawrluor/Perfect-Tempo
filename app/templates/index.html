@@ -1,28 +1,11 @@
-<html>
-  <head>
-    <title>Perfect Tempo</title>
-  </head>
+{% extends "base.html" %}
 
-  <body>
-    <h1>Perfect Tempo</h1>
-    {% block content %}
-      <form action="" method="post" novalidate>
-        {{ form.hidden_tag() }}
-        {{ form.bpm.label }}
-        {{ form.bpm }}
+{% block content %}
+  <form action="" method="post" novalidate>
+    {{ form.hidden_tag() }}
+    {{ form.bpm.label }}
+    {{ form.bpm }}
 
-        {{ form.submit() }}
-      </form>
-    {% endblock %}
-
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        <ul>
-            {% for message in messages %}
-            <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-      {% endif %}
-    {% endwith %}
-  </body>
-<html>
+    {{ form.submit() }}
+  </form>
+{% endblock %}

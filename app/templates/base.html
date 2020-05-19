@@ -1,0 +1,30 @@
+<html>
+  <head>
+    <!-- Supply default title if individual pages lack one -->
+    {% if title %}
+      <title>{{ title }} - Perfect Tempo</title>
+    {% else %}
+      <title>Perfect Tempo</Title>
+    {% endif %}
+  </head>
+
+  <body>
+    <div><a href="/">Perfect Tempo</a></div>
+    <div><a href="/about">About</a></div>
+    <hr>
+
+    <!-- Handle flash messages, above all content -->
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul>
+          {% for message in messages %}
+          <li>{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}
+    {% endblock %}
+  </body>
+</html>
