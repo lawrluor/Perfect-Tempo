@@ -5,3 +5,6 @@ from wtforms.validators import DataRequired
 class NumberForm(FlaskForm):
   bpm = IntegerField('BPM', validators=[DataRequired()])
   submit = SubmitField('Guess')
+
+class PlayForm(FlaskForm):
+  submit = SubmitField('Play')

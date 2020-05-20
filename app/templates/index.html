@@ -1,11 +1,30 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <form action="" method="post" novalidate>
-    {{ form.hidden_tag() }}
-    {{ form.bpm.label }}
-    {{ form.bpm }}
+  <!-- <audio controls controlsList="nodownload notimer">
+    <source src="{{ url_for('static', filename='mp3/' + target + '.mp3') }}" />
+  </audio> -->
 
-    {{ form.submit() }}
+  <h2>Current target: {{ target }}</h2>
+  <h2>{{ started }}</h2>
+  <h2>{{ guesses }}</h2>
+
+  <form action="" method="post" novalidate>
+    {{ play_form.hidden_tag() }}
+    {{ play_form.submit() }}
   </form>
+
+  <!-- Only play & display guess after User clicked play for this round -->
+  {% if started %}
+    <audio autoplay>
+      <source src="{{ url_for('static', filename='mp3/' + target + '.mp3') }}" />
+    </audio>
+
+    <form action="" method="post" novalidate>
+      {{ guess_form.hidden_tag() }}
+      {{ guess_form.bpm.label }}
+      {{ guess_form.bpm }}
+      {{ guess_form.submit() }}
+    </form>
+  {% endif %}
 {% endblock %}
