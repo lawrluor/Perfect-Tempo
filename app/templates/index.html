@@ -1,30 +1,37 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <!-- <audio controls controlsList="nodownload notimer">
+  <!-- Using Audio Controls instead of autoplay
+  <audio controls controlsList="nodownload notimer">
     <source src="{{ url_for('static', filename='mp3/' + target + '.mp3') }}" />
   </audio> -->
 
-  <h2>Current target: {{ target }}</h2>
-  <h2>{{ started }}</h2>
-  <h2>{{ guesses }}</h2>
+  <h2>Guesses: {{ guesses }}</h2>
 
-  <form action="" method="post" novalidate>
-    {{ play_form.hidden_tag() }}
-    {{ play_form.submit() }}
-  </form>
-
-  <!-- Only play & display guess after User clicked play for this round -->
   {% if started %}
+    <!-- If started, both Play button & Guess inputs are available -->
     <audio autoplay>
       <source src="{{ url_for('static', filename='mp3/' + target + '.mp3') }}" />
     </audio>
 
-    <form action="" method="post" novalidate>
+    <form action="" method="post">
       {{ guess_form.hidden_tag() }}
-      {{ guess_form.bpm.label }}
-      {{ guess_form.bpm }}
-      {{ guess_form.submit() }}
+      <div>{{ guess_form.play() }} </div>
+      <div>
+        {{ guess_form.bpm.label }}
+        {{ guess_form.bpm }}
+        {{ guess_form.submit() }}
+      </div>
+
+      {% for error in guess_form.bpm.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+      {% endfor %}
+    </form>
+  {% else %}
+    <!-- If not started, only Play button is visible -->
+    <form action="" method="post">
+      {{ guess_form.hidden_tag() }}
+      <div>{{ guess_form.play() }}</div>
     </form>
   {% endif %}
 {% endblock %}

@@ -1,6 +1,6 @@
 from app import web_app
 from flask import flash, session, redirect, render_template, url_for
-from app.forms import NumberForm, PlayForm
+from app.forms import GuessForm, PlayForm
 
 import random
 import os
@@ -13,8 +13,7 @@ import os
 
 @web_app.route('/', methods=["GET", "POST"])
 def index():
-  started = False
-  guess_form = NumberForm()
+  guess_form = GuessForm()
   play_form = PlayForm()
 
   if 'target' not in session:
@@ -23,30 +22,43 @@ def index():
   if 'guesses' not in session:
     session['guesses'] = 0
 
-  if play_form.validate_on_submit():
-    started = True
+  if 'started' not in session:
+    session['started'] = False
 
-  if guess_form.validate_on_submit():
-    guess = guess_form.bpm.data
-    if guess==session['target']:
-      # If guessed right: Then reset target, guesses, and redirect
-      flash('You submitted: {}. The bpm was: {}'.format(guess, session['target']))
-      session['target'] = random.randint(120, 131)
-      session['guesses'] = 0
-      return redirect(url_for('index'))
-    else:
-      # If guessed wrong: Increment guesses, but don't redirect
-      session['guesses'] += 1
-      print('You submitted: {}. The bpm was: {}.'.format(guess, session['target']))
+  print('Started: {}, Target: {}'.format(session['started'], session['target']))
+
+  # TODO: Play is always being submitted
+  # Ideally, only check guess form if Play was NOT submitted (play button was not clicked)
+  play = guess_form.play.data
+  if guess_form.play.data:
+    print("play pressed:", play)
+    # print('play form clicked', play_form.submit.data)
+    session['started'] = True
   else:
-    print('form not submitted')
+    print('guess pressed:', guess_form.submit.data)
+    if guess_form.validate_on_submit():
+      guess = guess_form.bpm.data
+
+      if guess==session['target']:
+        # If guessed right: Then reset target, guesses, and redirect
+        flash('Correct! You guessed: {}. The bpm was: {}'.format(guess, session['target']))
+        session['target'] = random.randint(120, 130) # inclusive
+        session['guesses'] = 0
+        session['started'] = False
+        return redirect(url_for('index'))
+      else:
+        # If guessed wrong: Increment guesses, but don't redirect
+        flash('Incorrect. You guessed: {}.'.format(guess))
+        session['guesses'] += 1
+    else:
+      print('guess_form not submitted')
 
   return render_template('index.html',
     guess_form=guess_form,
     play_form=play_form,
     guesses=session['guesses'],
     target=str(session['target']),
-    started=started
+    started=session['started']
   )
 
 

@@ -9,9 +9,11 @@
   </head>
 
   <body>
-    <div><a href="/">Perfect Tempo</a></div>
-    <div><a href="/about">About</a></div>
+    <span><a href="/">Perfect Tempo</a> | <a href="/about">About</a></span>
     <hr>
+
+    {% block content %}
+    {% endblock %}
 
     <!-- Handle flash messages, above all content -->
     {% with messages = get_flashed_messages() %}
@@ -23,8 +25,5 @@
         </ul>
       {% endif %}
     {% endwith %}
-
-    {% block content %}
-    {% endblock %}
   </body>
 </html>
