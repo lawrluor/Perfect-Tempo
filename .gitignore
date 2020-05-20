@@ -2,6 +2,7 @@
 
 # Our Ignored Files
 *secret_key.py
+*deployment.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
