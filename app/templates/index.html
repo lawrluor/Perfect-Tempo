@@ -6,7 +6,7 @@
     <source src="{{ url_for('static', filename='mp3/' + target + '.mp3') }}" />
   </audio> -->
 
-  <h2>Guesses: {{ guesses }}</h2>
+  <h3>Attempts: {{ guesses }}</h3>
 
   {% if started %}
     <!-- If started, both Play button & Guess inputs are available -->
@@ -14,14 +14,18 @@
       <source src="{{ url_for('static', filename='mp3/' + target + '.mp3') }}" />
     </audio>
 
+    <!-- Style WTForm, css classes: https://stackoverflow.com/a/34748860/6322172 -->
+    <!-- First SubmitField (button) that appears is activated by enter/return key: https://stackoverflow.com/a/31197760/6322172 -->
     <form action="" method="post">
       {{ guess_form.hidden_tag() }}
-      <div>{{ guess_form.play() }} </div>
-      <div>
+
+      <div class="guessForm">
         {{ guess_form.bpm.label }}
-        {{ guess_form.bpm }}
-        {{ guess_form.submit() }}
+        <span>{{ guess_form.bpm(class_='guessInput') }}</span>
+        <span>{{ guess_form.submit(class_='guessButton') }}</span>
       </div>
+
+      <div>{{ guess_form.play(class_='playButton') }}</div>
 
       {% for error in guess_form.bpm.errors %}
         <span style="color: red;">[{{ error }}]</span>
@@ -31,7 +35,29 @@
     <!-- If not started, only Play button is visible -->
     <form action="" method="post">
       {{ guess_form.hidden_tag() }}
-      <div>{{ guess_form.play() }}</div>
+      <div>{{ guess_form.play(class_='playButton') }}</div>
     </form>
   {% endif %}
+
+  <!-- Handle flash messages -->
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <ul>
+        {% for message in messages %}
+        <li><b>{{ message }}</b></li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+
+  <br>
+
+  <h3>Instructions</h3>
+  <ol>
+    <li>A random tempo between 120-130 BPM (beats-per-minute), inclusive, will be selected.</li>
+    <li>This will be played as a MIDI drumset sample, for 2 measures in 4/4 time.</li>
+    <li>Do your best to identify the BPM of the sample.</li>
+    <li>You can play the sample again as many times as you want without penalty, by clicking 'Play Sound'.</li>
+    <li>You have unlimited attempts, and when you guess the correct BPM, a new tempo will be generated.</li>
+  </ol>
 {% endblock %}

@@ -1,0 +1,29 @@
+/* Entire Guess Form */
+.guessForm {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+/* Guess input textbox */
+.guessInput {
+  border-width: 1px;
+  border-color: lightgrey;
+  width: 50px;
+}
+
+/* Guess input submit button */
+.guessButton {
+  font-size: 16px;
+  width: 100px;
+}
+
+/* Play Button */
+.playButton {
+  font-size: 16px;
+  width: 200px;
+}
+
+.mainContainer {
+  margin-left: 15px;
+  margin-right: 15px;
+}

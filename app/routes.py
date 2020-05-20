@@ -1,9 +1,13 @@
 from app import web_app
 from flask import flash, session, redirect, render_template, url_for
-from app.forms import GuessForm, PlayForm
+from app.forms import GuessForm
 
 import random
 import os
+
+# MIDI setup (local only)
+import mido
+from mido import MidiFile
 
 # States
   # started=False means User has just loaded page, or has just guessed the last BPM correctly. Don't display the BPM form, and don't play the sample
@@ -14,7 +18,6 @@ import os
 @web_app.route('/', methods=["GET", "POST"])
 def index():
   guess_form = GuessForm()
-  play_form = PlayForm()
 
   if 'target' not in session:
     session['target'] = random.randint(120, 131)
@@ -27,21 +30,19 @@ def index():
 
   print('Started: {}, Target: {}'.format(session['started'], session['target']))
 
-  # TODO: Play is always being submitted
-  # Ideally, only check guess form if Play was NOT submitted (play button was not clicked)
-  play = guess_form.play.data
   if guess_form.play.data:
-    print("play pressed:", play)
-    # print('play form clicked', play_form.submit.data)
-    session['started'] = True
+    print("play pressed") # Play button of guess_form was pressed
+    session['started'] = True # Start game when play is pressed. Overwrites with True
   else:
-    print('guess pressed:', guess_form.submit.data)
+    # Only check guess content if play button was NOT clicked
+    # This is because if User wants to replay sound, it should only replay sound, not attempt to check their guess answer
+    print("guess pressed") # Guess button of guess_form was pressed
     if guess_form.validate_on_submit():
       guess = guess_form.bpm.data
 
       if guess==session['target']:
         # If guessed right: Then reset target, guesses, and redirect
-        flash('Correct! You guessed: {}. The bpm was: {}'.format(guess, session['target']))
+        flash('Correct! You guessed: {}. The BPM was: {}.'.format(guess, session['target']))
         session['target'] = random.randint(120, 130) # inclusive
         session['guesses'] = 0
         session['started'] = False
@@ -55,7 +56,6 @@ def index():
 
   return render_template('index.html',
     guess_form=guess_form,
-    play_form=play_form,
     guesses=session['guesses'],
     target=str(session['target']),
     started=session['started']
@@ -67,12 +67,14 @@ def about():
   return render_template('about.html', title='About')
 
 
-# Not used at the moment - just for playing local MIDI
-@web_app.route('/play')
-def play():
-  print(os.getcwd())
+# Just for playing local MIDI. Buggy.
+@web_app.route('/playMidi')
+def playMidi():
   output = mido.open_output(name='foo', virtual=True)
-  file_name = os.path.join(os.path.dirname(__file__), 'test.mid') # See https://stackoverflow.com/q/43652767/6322172
+  file_name = os.path.join(os.path.dirname(__file__), 'static/midi/test.mid') # See https://stackoverflow.com/q/43652767/6322172
+  print("Current Location:", os.getcwd())
+  print("MidiFile:", file_name)
+
   for message in MidiFile(file_name).play():
     output.send(message)
 
