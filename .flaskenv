@@ -1,0 +1,2 @@
+DEBUG_MODE=1
+FLASK_ENV=development
