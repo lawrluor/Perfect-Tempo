@@ -79,3 +79,13 @@ def playMidi():
     output.send(message)
 
   return render_template('about.html', title='Play')
+
+# Error handling
+@web_app.errorhandler(404) # for files not found
+def error_404(error):
+  return render_template('404.html'), 404
+
+@web_app.errorhandler(500) # for internal errors
+def error_500(error):
+  # rollback action/DB
+  return render_template('500.html'), 500
